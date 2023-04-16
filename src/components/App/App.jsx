@@ -1,24 +1,80 @@
-import { Component } from 'react';
+// import { Component } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Searchbar from 'components/Searchbar';
 import ImageGallery from 'components/ImageGallery';
+import { fetchData } from 'helpers/fetchAPI';
 import css from './App.module.css';
-class App extends Component {
-  state = {
-    query: '',
+
+// class App extends Component {
+//   state = {
+//     query: '',
+//   };
+
+//   handleSubmit = query => {
+//     this.setState({ query });
+//   };
+
+//   render() {
+//     return (
+//       <div className={css.app}>
+//         <Searchbar onSubmit={this.handleSubmit} />
+//         <ImageGallery query={this.state.query} />
+//       </div>
+//     );
+//   }
+// }
+
+const App = () => {
+  const [query, setQuery] = useState('');
+  const [status, setStatus] = useState('idle');
+  const [images, setImages] = useState([]);
+  const [page, setPage] = useState(1);
+
+  const getData = useCallback(() => {
+    setStatus('pending');
+    fetchData(query, page).then(response => {
+      if (!response.hits.length) {
+        setStatus('rejected');
+        return;
+      }
+      setImages(prevImages => [...prevImages, ...response.hits]);
+      setStatus('resolved');
+      if (response.totalHits === response.hits.length) {
+        setStatus('idle');
+      }
+    });
+  }, [page, query]);
+
+  useEffect(() => {
+    try {
+      if (query) {
+        getData();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }, [getData, page, query]);
+
+  const onLoadMore = () => {
+    setPage(prev => prev + 1);
   };
 
-  handleSubmit = query => {
-    this.setState({ query });
+  const handleSubmit = query => {
+    setImages([]);
+    setPage(1);
+    setQuery(query);
   };
 
-  render() {
-    return (
-      <div className={css.app}>
-        <Searchbar onSubmit={this.handleSubmit} />
-        <ImageGallery query={this.state.query} />
-      </div>
-    );
-  }
-}
-
+  return (
+    <div className={css.app}>
+      <Searchbar onSubmit={handleSubmit} />
+      <ImageGallery
+        query={query}
+        images={images}
+        status={status}
+        onLoadMore={onLoadMore}
+      />
+    </div>
+  );
+};
 export default App;
