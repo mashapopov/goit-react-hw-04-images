@@ -1,28 +1,8 @@
-// import { Component } from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import Searchbar from 'components/Searchbar';
 import ImageGallery from 'components/ImageGallery';
 import { fetchData } from 'helpers/fetchAPI';
 import css from './App.module.css';
-
-// class App extends Component {
-//   state = {
-//     query: '',
-//   };
-
-//   handleSubmit = query => {
-//     this.setState({ query });
-//   };
-
-//   render() {
-//     return (
-//       <div className={css.app}>
-//         <Searchbar onSubmit={this.handleSubmit} />
-//         <ImageGallery query={this.state.query} />
-//       </div>
-//     );
-//   }
-// }
 
 const App = () => {
   const [query, setQuery] = useState('');

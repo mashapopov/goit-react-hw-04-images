@@ -1,29 +1,14 @@
-// import { Component } from 'react';
 import { useState } from 'react';
 import css from './Searchbar.module.css';
 import { IoSearchOutline } from 'react-icons/io5';
 import PropTypes from 'prop-types';
 
 const Searchbar = ({ onSubmit }) => {
-  //   state = {
-  //     value: '',
-  //   };
   const [value, setValue] = useState('');
 
-  //   handleChange = ({ target: { value } }) => {
-  //     this.setState({ value });
-
-  //     handleChange = ({ target: { value } }) => {
-  //       setValue(value);
-  //     };
   const handleChange = ({ target: { value } }) => {
     setValue(value);
   };
-
-  //     const handleSubmit = e => {
-  //       e.preventDefault();
-  //       onSubmit(value);
-  //     };
 
   const handleSubmit = e => {
     e.preventDefault();
